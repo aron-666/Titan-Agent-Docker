@@ -37,7 +37,6 @@ build-arm64:
   services:
     - docker:dind
   script:
-    - cd $PROJECT_NAME
     - docker build --build-arg TARGETARCH=arm64 -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
     - docker tag $IMAGE_NAME:$CI_COMMIT_SHORT_SHA $IMAGE_NAME:arm64-$TAG_LATEST
     - docker push $IMAGE_NAME:arm64-$TAG_LATEST
