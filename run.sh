@@ -132,8 +132,8 @@ main() {
     fi
 
     # 禁用 IPv6
-    sysctl -w net.ipv6.conf.all.disable_ipv6=1
-    sysctl -w net.ipv6.conf.default.disable_ipv6=1
+    # sysctl -w net.ipv6.conf.all.disable_ipv6=1
+    # sysctl -w net.ipv6.conf.default.disable_ipv6=1
     
     install_agent
 
@@ -150,29 +150,29 @@ main() {
         sleep 1
         # check if agent is still running
         if ! kill -0 $agentId 2>/dev/null; then
-            echo "Agent stopped restarting..."
+            echo "Agent stopped restarting......."
             run_agent
         fi
 
         # check if multipass is still running
         if ! kill -0 $multipassId 2>/dev/null; then
-            echo "Multipass stopped restarting..."
+            echo "Multipass stopped restarting......."
             kill $multipassId
             start_multipass
             multipass authenticate $MULTIPASS_PASSPHRASE
         fi
 
         # 偵測 multipass list 是否包含 ubuntu-niulink 並且狀態不為 Running ，則啟動
-        if multipass list | grep -q "ubuntu-niulink"; then
-            if ! multipass list | grep -q "ubuntu-niulink.*Running"; then
-                sleep 10
-                if ! multipass list | grep -q "ubuntu-niulink.*Running"; then
-                    echo "Starting ubuntu-niulink..."
-                    multipass start ubuntu-niulink
-                fi
+        # if multipass list | grep -q "ubuntu-niulink"; then
+        #     if ! multipass list | grep -q "ubuntu-niulink.*Running"; then
+        #         sleep 10
+        #         if ! multipass list | grep -q "ubuntu-niulink.*Running"; then
+        #             echo "Starting ubuntu-niulink..."
+        #             multipass start ubuntu-niulink
+        #         fi
                 
-            fi
-        fi
+        #     fi
+        # fi
         
     done
 }
