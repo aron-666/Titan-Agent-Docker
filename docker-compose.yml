@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+
+  agent:
+    image: aron666/titan-agent
+    environment:
+      - KEY=WEXRVMW8zXCL
+    privileged: true
+    cap_add:
+      - ALL
+    devices:
+      - /dev/kvm:/dev/kvm
+    ports:
+      - "16509:16509"
+    volumes:
+      - /home/user/pcdn/data:/app/data
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TARGETARCH: amd64
