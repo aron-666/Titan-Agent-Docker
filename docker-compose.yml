@@ -1,8 +1,7 @@
 version: "3.9"
 services:
-
   agent:
-    image: aron666/titan-agent
+    image: aron666/titan-agent:test
     environment:
       - KEY=WEXRVMW8zXCL
     privileged: true
@@ -10,8 +9,8 @@ services:
       - ALL
     devices:
       - /dev/kvm:/dev/kvm
-    ports:
-      - "16509:16509"
+    network_mode: "host"
+    restart: always
     volumes:
       - /home/user/pcdn/data:/app/data
     build: 

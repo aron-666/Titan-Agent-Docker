@@ -54,5 +54,16 @@ RUN tar xvf multipass.tar && rm multipass.tar \
     && chmod +x /app/*.sh /app/multipass/multipassd /app/multipass/multipass && ln -s /app/multipass/multipass /usr/local/bin/multipass
 
 ENV MULTIPASS_PASSPHRASE=default^^p@ssw0rd
+ENV WORKSPACE=/app/data/agent
+ENV AGENT_PATH=/app/agent
+ENV MULTIPASS_PATH=/app/multipass
+ENV SERVER_URL=https://test4-api.titannet.io
+ENV DATA_DIR=/app/data
+ENV MULTIPASS_SOCKET_PATH=/run/multipass_socket
+ENV LOG_FILE=$WORKSPACE/agent.log
+ENV MULTIPASS_STORAGE=$DATA_DIR/multipass
+ENV MULTIPASS_SERVER_ADDRESS=unix:$MULTIPASS_SOCKET_PATH
+ENV MULTIPASS_LOG_FILE=$DATA_DIR/multipass/multipass.log
+
 
 ENTRYPOINT [ "./run.sh" ]
