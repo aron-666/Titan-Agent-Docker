@@ -9,10 +9,10 @@ services:
       - ALL
     devices:
       - /dev/kvm:/dev/kvm
-    network_mode: "host"
+    # network_mode: "host"
     restart: always
     volumes:
-      - /home/user/pcdn/data:/app/data
+      - ./data:/app/data
     build: 
       context: .
       dockerfile: Dockerfile
