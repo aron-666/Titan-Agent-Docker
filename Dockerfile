@@ -51,7 +51,9 @@ COPY multipass.tar /app
 COPY *.sh /app
 
 RUN tar xvf multipass.tar && rm multipass.tar \
-    && chmod +x /app/*.sh /app/multipass/multipassd /app/multipass/multipass && ln -s /app/multipass/multipass /usr/local/bin/multipass
+    && chmod +x /app/*.sh /app/multipass/multipassd /app/multipass/multipass \
+    && ln -s /app/multipass/multipass /usr/local/bin/multipass \
+    && ln -s /app/data/agent/apps/qiniu-unix/install-qiniu.sh /app
 
 ENV MULTIPASS_PASSPHRASE=default^^p@ssw0rd
 ENV WORKSPACE=/app/data/agent
@@ -64,6 +66,9 @@ ENV LOG_FILE=$WORKSPACE/agent.log
 ENV MULTIPASS_STORAGE=$DATA_DIR/multipass
 ENV MULTIPASS_SERVER_ADDRESS=unix:$MULTIPASS_SOCKET_PATH
 ENV MULTIPASS_LOG_FILE=$DATA_DIR/multipass/multipass.log
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=90s --retries=10 \
+  CMD /app/install-qiniu.sh info | grep "BOX_ID:" || exit 1
 
 
 ENTRYPOINT [ "./run.sh" ]
