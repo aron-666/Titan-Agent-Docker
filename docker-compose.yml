@@ -3,16 +3,18 @@ services:
   agent:
     image: aron666/titan-agent:test
     environment:
-      - KEY=WEXRVMW8zXCL
+      - KEY=身分碼
     privileged: true
     cap_add:
       - ALL
     devices:
       - /dev/kvm:/dev/kvm
-    # network_mode: "host"
     restart: always
     volumes:
       - ./data:/app/data
+    tty: true
+    stdin_open: true
+    pid: host
     build: 
       context: .
       dockerfile: Dockerfile
