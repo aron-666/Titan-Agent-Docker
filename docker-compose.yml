@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  agent:
+    image: aron666/titan-agent:test
+    environment:
+      - KEY=身分碼
+    privileged: true
+    cap_add:
+      - ALL
+    devices:
+      - /dev/kvm:/dev/kvm
+    restart: always
+    volumes:
+      - ./data:/app/data
+    tty: true
+    stdin_open: true
+    pid: host
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TARGETARCH: amd64
