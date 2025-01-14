@@ -4,6 +4,7 @@ AGENT_X64_URL=https://pcdn.titannet.io/test4/bin/agent-linux.zip
 AGENT_ARM_URL=https://pcdn.titannet.io/test4/bin/agent-arm.zip
 
 install_agent() {
+    echo "Installing agent"
     case "$TARGETARCH" in \
         amd64)  AGENT_URL=$AGENT_X64_URL ;; \
         arm64)  AGENT_URL=$AGENT_ARM_URL ;; \
@@ -16,7 +17,7 @@ install_agent() {
 
     echo "Downloading agent from $AGENT_URL"
     curl -L $AGENT_URL -o agent.zip
-    unzip agent.zip
+    unzip -o agent.zip
     chmod +x agent
     rm agent.zip
     echo "Agent installed"
@@ -30,6 +31,8 @@ run_agent() {
 
     $AGENT_PATH/agent --working-dir=$WORKSPACE --server-url=$SERVER_URL --key=$KEY &
     agentId=$!
+
+    echo "Agent started with pid $agentId"
 }
 
 start_multipass() {
@@ -132,9 +135,11 @@ main() {
     fi
 
     # 禁用 IPv6
+    echo "Disabling IPv6..."
     sysctl -w net.ipv6.conf.all.disable_ipv6=1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1
     
+
     install_agent
 
     run_multipass
@@ -147,7 +152,7 @@ main() {
     run_agent
 
     while true; do
-        sleep 1
+        sleep 30
         # check if agent is still running
         if ! kill -0 $agentId 2>/dev/null; then
             echo "Agent stopped restarting......."
@@ -160,6 +165,33 @@ main() {
             kill $multipassId
             start_multipass
             multipass authenticate $MULTIPASS_PASSPHRASE
+        fi
+
+
+        if ! multipass list > /dev/null 2>&1; then
+            echo "Multipass client failed to connect."
+            
+            if [ -n "$multipassId" ]; then
+                kill $multipassId
+            fi
+            
+            sleep 15
+            start_multipass
+            sleep 6
+            
+            if multipass authenticate $MULTIPASS_PASSPHRASE; then
+                if multipass list > /dev/null 2>&1; then
+                    echo "Multipass client connected successfully."
+                    echo "Multipass started with pid $multipassId"
+                else
+                    echo "Multipass client failed to connect."
+                    if [ -n "$multipassId" ]; then
+                        kill $multipassId
+                    fi
+                fi
+            else
+                echo "Multipass authentication failed."
+            fi
         fi
 
         # 偵測 multipass list 是否包含 ubuntu-niulink 並且狀態不為 Running ，則啟動
