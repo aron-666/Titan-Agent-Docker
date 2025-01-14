@@ -147,7 +147,7 @@ main() {
     run_agent
 
     while true; do
-        sleep 1
+        sleep 10
         # check if agent is still running
         if ! kill -0 $agentId 2>/dev/null; then
             echo "Agent stopped restarting......."
