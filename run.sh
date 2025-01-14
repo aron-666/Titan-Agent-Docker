@@ -163,7 +163,7 @@ main() {
         fi
 
 
-        if ! multipass list; then
+        if ! multipass list > /dev/null 2>&1; then
             echo "Multipass client failed to connect."
             
             if [ -n "$multipassId" ]; then
@@ -175,7 +175,7 @@ main() {
             sleep 6
             
             if multipass authenticate $MULTIPASS_PASSPHRASE; then
-                if multipass list; then
+                if multipass list > /dev/null 2>&1; then
                     echo "Multipass client connected successfully."
                     echo "Multipass started with pid $multipassId"
                 else
