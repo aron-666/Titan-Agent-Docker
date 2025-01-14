@@ -43,6 +43,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     expect \
     nano \
     ovmf \
+    libreadline-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
