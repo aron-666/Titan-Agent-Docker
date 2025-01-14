@@ -162,6 +162,33 @@ main() {
             multipass authenticate $MULTIPASS_PASSPHRASE
         fi
 
+
+        if ! multipass list; then
+            echo "Multipass client failed to connect."
+            
+            if [ -n "$multipassId" ]; then
+                kill $multipassId
+            fi
+            
+            sleep 15
+            start_multipass
+            sleep 6
+            
+            if multipass authenticate $MULTIPASS_PASSPHRASE; then
+                if multipass list; then
+                    echo "Multipass client connected successfully."
+                    echo "Multipass started with pid $multipassId"
+                else
+                    echo "Multipass client failed to connect."
+                    if [ -n "$multipassId" ]; then
+                        kill $multipassId
+                    fi
+                fi
+            else
+                echo "Multipass authentication failed."
+            fi
+        fi
+
         # 偵測 multipass list 是否包含 ubuntu-niulink 並且狀態不為 Running ，則啟動
         # if multipass list | grep -q "ubuntu-niulink"; then
         #     if ! multipass list | grep -q "ubuntu-niulink.*Running"; then
